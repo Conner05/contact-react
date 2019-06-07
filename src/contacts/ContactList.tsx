@@ -1,5 +1,5 @@
 import React from 'react';
-import { Contact } from './Contact';
+import { Contact } from './contact.model';
 import { Link } from 'react-router-dom';
 import ErrorBoundary from '../components/ErrorBoundary';
 

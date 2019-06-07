@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import ContactList from "./ContactList";
 import { getContacts } from './contacts.api';
-import { Contact } from './Contact';
+import { Contact } from './contact.model';
 import { Route } from 'react-router-dom';
 import ContactDetail from './ContactDetail';
-import ErrorBoundary from '../components/ErrorBoundary';
-import dataFetcher from '../utils/api.utils';
+import apiUtils from '../utils/api.utils';
+import ContactsApiErrorBoundary from '../components/ContactsApiErrorBoundary';
+import ContactEdit from './ContactEdit';
 
 const Contacts = ({ match }: any) => {
     const [contacts, setContacts] = useState<Contact[]>([]);
     useEffect(() => {
-        dataFetcher.getAll(getContacts, setContacts);
+        apiUtils.getAll(getContacts, setContacts);
     }, []);
     return (
         <div className="col-md-10">
-            <ErrorBoundary>
+            <ContactsApiErrorBoundary>
                 <Route exact={true} path={`${match.path}`} render={() => (
                     <ContactList contacts={contacts} />
                 )} />
-            </ErrorBoundary>
-            <Route path={`${match.path}/:contactId`} component={ContactDetail} />
+            </ContactsApiErrorBoundary>
+            <Route exact={true} path={`${match.path}/:contactId`} component={ContactDetail} />
+            <Route exact={true} path={`${match.path}/edit/:contactId`} component={ContactEdit} />
         </div>
     );
 };

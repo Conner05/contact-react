@@ -1,9 +1,8 @@
-import React from 'react';
-
 const getById = async <T extends any>(id: number, getData: (id: number) => Promise<T>, setData: (result: T) => void) => {
     try {
         const result = await getData(id);
         setData(result);
+        return result;
     } catch {
         console.log('error')
         throw new Error(`getById(${id}): Couldn't fetch data`);
@@ -14,12 +13,20 @@ const getAll = async <T extends any>(getData: () => Promise<T>, setData: (result
     try {
         const result = await getData();
         setData(result);
-    } catch {
-        console.log('error')
-        throw new Error(`getAll(): Couldn't fetch data`);
+    } catch (error) {
+        const badResult: T | any = null;
+        setData(badResult);
     }
 };
 
-const dataFetcher = { getAll, getById };
+const update = async <T extends any>(updateRoute: (data: T) => Promise<void>, dataToUpdate: T) => {
+    try {
+        await updateRoute(dataToUpdate);
+    } catch (error) {
+        throw new Error("Couldn't update contact");
+    }
+}
 
-export default dataFetcher;
+const apiUtils = { getAll, getById, update };
+
+export default apiUtils;
